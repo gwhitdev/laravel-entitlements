@@ -1,5 +1,5 @@
 {
-    "name": "gwhitdev/laravel-entitlements",
+    "name": "gwhitdev/entitlements-for-laravel",
     "description": "Plan-based feature entitlements for Laravel — the layer between Cashier (who pays) and your app (what paying unlocks). Facade: Tessera. Part of the Keel line.",
     "keywords": ["laravel", "entitlements", "feature-gating", "saas", "billing", "cashier", "pennant", "plans"],
     "license": "MIT",
