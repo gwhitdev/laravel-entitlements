@@ -9,8 +9,7 @@ use ReflectionClass;
 class MakeFeatureCommand extends Command
 {
     protected $signature = 'entitlements:make
-                            {name : StudlyCase feature name}
-                            {--group=Other : Feature group for catalog organisation}';
+                            {name : StudlyCase feature name}';
 
     protected $description = 'Add a case to the feature enum';
 
