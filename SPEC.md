@@ -43,7 +43,29 @@ All cross-references use `feature_key` strings so the mapping works regardless o
 
 ## Definition of done (Stage 1)
 
-- [ ] `CascadingFeatureGate` + `StripePlanResolver` + `EnumFeatureCatalog` + `HasFeatures` trait.
-- [ ] All `ResolutionCascadeSpecTest` cases un-skipped and green.
-- [ ] Cashier-optional (bound via `class_exists`); package still boots without it.
-- [ ] CI matrix green; Pint clean.
+- [x] `CascadingFeatureGate` + `StripePlanResolver` + `EnumFeatureCatalog` + `HasFeatures` trait.
+- [x] All `ResolutionCascadeSpecTest` cases un-skipped and green.
+- [x] Cashier-optional (bound via `class_exists`); package still boots without it.
+- [x] CI matrix green; Pint clean.
+
+## Stage 2 (DX) — batteries-included layer
+
+The commands, middleware, Blade directive, and frontend stub that make Entitlements feel native in a Laravel app.
+
+### Commands
+
+- **`entitlements:install`** — Publishes config and migrations, then prints next steps (add `HasFeatures` trait, run `migrate`, run `entitlements:make`).
+- **`entitlements:make {name} {--group=Other}`** — Appends a case to the consumer's feature enum. Creates the enum file if it doesn't exist. Idempotent (skips duplicate values).
+
+### HTTP Middleware
+
+- **`feature` middleware alias** — `Route::middleware('feature:advanced_reporting')` aborts 403 unless the authenticated user is entitled to the given feature key. Guests always 403.
+
+### Blade
+
+- **`@feature('key')` / `@endfeature`** — Conditional Blade directive wrapping `$user->hasFeature($key)`. Omits content for entitled users; hides it for guests and non-entitled users.
+
+### Frontend exposure
+
+- **`Entitlements::forUser($user)`** — Returns the array of feature keys for sharing as an Inertia prop.
+- **`resources/js/useFeature.ts`** — Publishable stub reading `usePage().props.features` and exposing a `(key: string) => boolean` check. Published via `php artisan vendor:publish --tag=entitlements-js`.
