@@ -1,0 +1,53 @@
+{
+    "name": "gwhitdev/laravel-entitlements",
+    "description": "Plan-based feature entitlements for Laravel — the layer between Cashier (who pays) and your app (what paying unlocks). Facade: Tessera. Part of the Keel line.",
+    "keywords": ["laravel", "entitlements", "feature-gating", "saas", "billing", "cashier", "pennant", "plans"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gareth Whitley",
+            "email": "garethwhitleychard@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/console": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/database": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0"
+    },
+    "require-dev": {
+        "laravel/cashier": "^15.0 || ^16.0",
+        "laravel/pennant": "^1.0",
+        "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+        "pestphp/pest": "^3.0 || ^4.0"
+    },
+    "suggest": {
+        "laravel/cashier": "Default CashierPlanResolver maps Stripe prices to entitlements (the seam supports other billers).",
+        "laravel/pennant": "Optional bridge: expose entitlements as Pennant features for a familiar check API."
+    },
+    "autoload": {
+        "psr-4": {
+            "Entitlements\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Entitlements\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Entitlements\\EntitlementsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
