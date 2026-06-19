@@ -1,4 +1,4 @@
-# Laravel Entitlements
+# Entitlements for Laravel
 
 > Plan-based feature **entitlements** for Laravel — the layer between Cashier (*who pays*) and your app (*what paying unlocks*). Facade: **Tessera**. Part of the [Keel](https://github.com/gwhitdev) line.
 
