@@ -3,6 +3,7 @@
 namespace Entitlements;
 
 use Entitlements\Console\InstallCommand;
+use Entitlements\Console\LintCommand;
 use Entitlements\Console\MakeFeatureCommand;
 use Entitlements\Contracts\FeatureCatalog;
 use Entitlements\Contracts\FeatureGate;
@@ -70,6 +71,7 @@ class EntitlementsServiceProvider extends ServiceProvider
     {
         $this->commands([
             InstallCommand::class,
+            LintCommand::class,
             MakeFeatureCommand::class,
         ]);
     }
