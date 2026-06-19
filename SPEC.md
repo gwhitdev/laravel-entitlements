@@ -43,7 +43,34 @@ All cross-references use `feature_key` strings so the mapping works regardless o
 
 ## Definition of done (Stage 1)
 
-- [ ] `CascadingFeatureGate` + `StripePlanResolver` + `EnumFeatureCatalog` + `HasFeatures` trait.
-- [ ] All `ResolutionCascadeSpecTest` cases un-skipped and green.
-- [ ] Cashier-optional (bound via `class_exists`); package still boots without it.
-- [ ] CI matrix green; Pint clean.
+- [x] `CascadingFeatureGate` + `StripePlanResolver` + `EnumFeatureCatalog` + `HasFeatures` trait.
+- [x] All `ResolutionCascadeSpecTest` cases un-skipped and green.
+- [x] Cashier-optional (bound via `class_exists`); package still boots without it.
+- [x] CI matrix green; Pint clean.
+
+## Stage 3 (Dependencies) — transitive feature resolution
+
+Feature dependencies extend the cascade so entitlements resolve through the catalog's dependency graph.
+
+### Dependency resolution in `CascadingFeatureGate`
+
+The `has($user, $key)` method now:
+1. Determines direct cascade entitlement (existing logic)
+2. Resolves all transitive dependencies declared in the catalog for `$key`
+3. Requires EVERY dependency to be directly satisfied for the feature to grant
+4. Detects circular dependencies and treats them as satisfied (no infinite loops)
+
+The `entitlements($user)` method returns the full flattened set including all transitively-resolved dependency keys.
+
+### `ConfigFeatureCatalog`
+
+New config-driven catalog driver at `src/Catalog/ConfigFeatureCatalog.php`. Reads features from `config('entitlements.features')` with per-feature `key`, `group`, and `dependencies`:
+
+```php
+'features' => [
+    ['key' => 'advanced_reporting', 'group' => 'Reporting', 'dependencies' => ['api_access']],
+    ['key' => 'api_access', 'group' => 'Integrations', 'dependencies' => []],
+],
+```
+
+Wire by setting `config('entitlements.catalog')` to `\Entitlements\Catalog\ConfigFeatureCatalog::class`.

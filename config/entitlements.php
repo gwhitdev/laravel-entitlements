@@ -40,4 +40,10 @@ return [
      | When true, users flagged is_admin are entitled to every feature (top of the cascade).
      */
     'admin_override' => true,
+
+    /*
+     | Feature definitions used by the ConfigFeatureCatalog driver.
+     | Each entry: 'key' => string, 'group' => string, 'dependencies' => array of feature keys.
+     */
+    'features' => [],
 ];

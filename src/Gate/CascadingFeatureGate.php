@@ -15,6 +15,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
  *
  * Each input (grants, active state, plan keys) is memoized per user per request, mirroring the
  * proven N+1-safe pattern from the source app.
+ *
+ * Stage 3 adds dependency resolution: a feature is only granted if all of its transitive
+ * dependencies are also satisfied. Cycle detection prevents infinite loops.
  */
 class CascadingFeatureGate implements FeatureGate
 {
@@ -38,15 +41,11 @@ class CascadingFeatureGate implements FeatureGate
             return true;
         }
 
-        if (in_array($key, $this->grants($user), true)) {
-            return true;
-        }
-
-        if (! $this->active($user)) {
+        if (! $this->directlyHas($user, $key)) {
             return false;
         }
 
-        return in_array($key, $this->planKeys($user), true);
+        return $this->dependenciesSatisfied($user, $key, []);
     }
 
     public function entitlements(Authenticatable $user): array
@@ -61,7 +60,89 @@ class CascadingFeatureGate implements FeatureGate
             $keys = array_merge($keys, $this->planKeys($user));
         }
 
-        return array_values(array_unique($keys));
+        $keys = array_values(array_unique($keys));
+
+        $entitled = [];
+
+        foreach ($keys as $k) {
+            if ($this->dependenciesSatisfied($user, $k, [])) {
+                $entitled[] = $k;
+
+                foreach ($this->resolveDependencyKeys($k, []) as $depKey) {
+                    if (! in_array($depKey, $entitled, true)) {
+                        $entitled[] = $depKey;
+                    }
+                }
+            }
+        }
+
+        return array_values($entitled);
+    }
+
+    /**
+     * Check the cascade without considering dependencies.
+     */
+    private function directlyHas(Authenticatable $user, string $key): bool
+    {
+        if (in_array($key, $this->grants($user), true)) {
+            return true;
+        }
+
+        if (! $this->active($user)) {
+            return false;
+        }
+
+        return in_array($key, $this->planKeys($user), true);
+    }
+
+    /**
+     * Recursively verify that every transitive dependency of $key is directly held.
+     * $visited tracks the current resolution path to detect cycles.
+     */
+    private function dependenciesSatisfied(Authenticatable $user, string $key, array $visited): bool
+    {
+        if (in_array($key, $visited, true)) {
+            return true;
+        }
+
+        $visited[] = $key;
+
+        foreach ($this->catalog->dependenciesFor($key) as $dependency) {
+            if (! $this->directlyHas($user, $dependency)) {
+                return false;
+            }
+
+            if (! $this->dependenciesSatisfied($user, $dependency, $visited)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Collect all transitive dependency keys for a feature.
+     */
+    private function resolveDependencyKeys(string $key, array $visited): array
+    {
+        if (in_array($key, $visited, true)) {
+            return [];
+        }
+
+        $visited[] = $key;
+
+        $deps = $this->catalog->dependenciesFor($key);
+        $all = $deps;
+
+        foreach ($deps as $dependency) {
+            foreach ($this->resolveDependencyKeys($dependency, $visited) as $child) {
+                if (! in_array($child, $all, true)) {
+                    $all[] = $child;
+                }
+            }
+        }
+
+        return $all;
     }
 
     private function isAdmin(Authenticatable $user): bool
