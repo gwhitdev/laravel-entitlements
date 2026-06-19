@@ -90,3 +90,14 @@ The commands, middleware, Blade directive, and frontend stub that make Entitleme
 
 ### Catalog driver to reintroduce (from the reverted Stage 3, corrected)
 - `ConfigFeatureCatalog` (reads `config('entitlements.features')`) — but it MUST normalize each entry to the full `{key, name, description, group, dependencies}` shape to match `EnumFeatureCatalog` (the reverted version omitted `name`/`description`, breaking the contract shape).
+
+## Stage 3 (built)
+
+Shipped on `stage-3` branch. Three deliverables implemented, all 41 tests green (24 pre-existing + 17 new).
+
+- **`src/Catalog/ConfigFeatureCatalog.php`** — Config-driven catalog driver reading `config('entitlements.features')`. Normalises every entry to the full five-key contract shape `{key, name, description, group, dependencies}` with sensible defaults. Consistent in style with `EnumFeatureCatalog`.
+- **`config/entitlements.php`** — Added `features` key (default `[]`) with a comment showing the entry shape.
+- **`src/Support/PrerequisiteChecker.php`** — Read-only analysis class. `forPlan()` returns features mapped to a plan whose declared dependencies are not also mapped. `all()` returns issues across every known plan. Honours both `plan_store` modes (`database` / `config`). Never changes entitlements.
+- **`src/Console/LintCommand.php`** — `entitlements:lint` command; uses `PrerequisiteChecker::all()`; prints a warning per unmet prerequisite; exits `FAILURE` if any issues found, `SUCCESS` with a clean message otherwise. Registered in `EntitlementsServiceProvider`.
+- **Tests**: `tests/Feature/ConfigFeatureCatalogTest.php`, `tests/Feature/PrerequisiteCheckerTest.php`, `tests/Feature/LintCommandTest.php`.
+- `src/Gate/CascadingFeatureGate.php` and `src/Contracts/` are byte-for-byte unchanged — `git diff main -- src/Gate src/Contracts` is empty.
