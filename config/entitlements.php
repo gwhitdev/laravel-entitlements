@@ -40,4 +40,11 @@ return [
      | When true, users flagged is_admin are entitled to every feature (top of the cascade).
      */
     'admin_override' => true,
+
+    /*
+     | Feature definitions used by ConfigFeatureCatalog (when catalog driver is set to it).
+     | Each entry shape: ['key' => 'advanced_reporting', 'group' => 'Reporting', 'dependencies' => ['expense_tracking']]
+     | Optional keys: 'name' (defaults to Str::headline($key)), 'description' (defaults to null).
+     */
+    'features' => [],
 ];
