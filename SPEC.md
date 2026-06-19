@@ -13,7 +13,7 @@ only ever touch `FeatureGate` (via the `Tessera` facade / `HasFeatures` trait).
 ## Default implementations (Stage 1 builds these)
 
 - `Gate\CascadingFeatureGate` implements `FeatureGate` — the cascade below, memoized per request.
-- `Resolvers\CashierPlanResolver` implements `PlanResolver` — reads the user's Stripe price + active state. Bound only if `laravel/cashier` is present (it's a suggest, not a hard require — the billing-agnostic seam).
+- `Resolvers\StripePlanResolver` implements `PlanResolver` — reads the user's Stripe price + active state via Cashier. Named for the provider (Stripe), not the package (Cashier), to match future PaddlePlanResolver / LemonSqueezyPlanResolver.
 - `Catalog\EnumFeatureCatalog` implements `FeatureCatalog` — reads the consumer enum at `config('entitlements.enum')`.
 - `Concerns\HasFeatures` trait for the User model — `hasFeature($key)` delegates to `FeatureGate`.
 
@@ -43,7 +43,7 @@ All cross-references use `feature_key` strings so the mapping works regardless o
 
 ## Definition of done (Stage 1)
 
-- [ ] `CascadingFeatureGate` + `CashierPlanResolver` + `EnumFeatureCatalog` + `HasFeatures` trait.
+- [ ] `CascadingFeatureGate` + `StripePlanResolver` + `EnumFeatureCatalog` + `HasFeatures` trait.
 - [ ] All `ResolutionCascadeSpecTest` cases un-skipped and green.
 - [ ] Cashier-optional (bound via `class_exists`); package still boots without it.
 - [ ] CI matrix green; Pint clean.
