@@ -11,7 +11,7 @@ return [
      | The billing seam (implements Entitlements\Contracts\PlanResolver).
      | Default reads Cashier's Stripe price; swap for Paddle/Lemon Squeezy without other changes.
      */
-    'resolver' => \Entitlements\Resolvers\CashierPlanResolver::class,
+    'resolver' => \Entitlements\Resolvers\StripePlanResolver::class,
 
     /*
      | The catalog seam (implements Entitlements\Contracts\FeatureCatalog).

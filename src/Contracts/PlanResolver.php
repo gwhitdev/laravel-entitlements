@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 /**
  * Resolves a user's billing plan to an opaque plan identifier and an active/inactive state.
  *
- * This is the billing seam: the default CashierPlanResolver reads the user's Stripe price,
+ * This is the billing seam: the default StripePlanResolver reads the user's Stripe price,
  * but a Paddle/Lemon Squeezy/no-billing implementation can be bound instead without any other
  * code change. Implementations MUST NOT assume a specific billing provider beyond their own.
  */
