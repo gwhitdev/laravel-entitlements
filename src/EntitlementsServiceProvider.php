@@ -2,9 +2,14 @@
 
 namespace Entitlements;
 
+use Entitlements\Console\InstallCommand;
+use Entitlements\Console\MakeFeatureCommand;
 use Entitlements\Contracts\FeatureCatalog;
 use Entitlements\Contracts\FeatureGate;
 use Entitlements\Contracts\PlanResolver;
+use Entitlements\Http\Middleware\EnsureFeature;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class EntitlementsServiceProvider extends ServiceProvider
@@ -33,14 +38,54 @@ class EntitlementsServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/entitlements.php' => $this->app->configPath('entitlements.php'),
-            ], 'entitlements-config');
+        // Stage 2: DX layer — commands, middleware, Blade, and frontend stub.
+        $this->bootMiddleware();
+        $this->bootBladeDirective();
 
-            $this->publishes([
-                __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
-            ], 'entitlements-migrations');
+        if ($this->app->runningInConsole()) {
+            $this->bootCommands();
+            $this->bootPublishing();
         }
+    }
+
+    private function bootMiddleware(): void
+    {
+        $router = $this->app->make(Router::class);
+
+        $router->aliasMiddleware('feature', EnsureFeature::class);
+    }
+
+    private function bootBladeDirective(): void
+    {
+        Blade::directive('feature', function (string $expression): string {
+            return "<?php if((bool) optional(auth()->user())?->hasFeature({$expression})): ?>";
+        });
+
+        Blade::directive('endfeature', function (): string {
+            return '<?php endif; ?>';
+        });
+    }
+
+    private function bootCommands(): void
+    {
+        $this->commands([
+            InstallCommand::class,
+            MakeFeatureCommand::class,
+        ]);
+    }
+
+    private function bootPublishing(): void
+    {
+        $this->publishes([
+            __DIR__.'/../config/entitlements.php' => $this->app->configPath('entitlements.php'),
+        ], 'entitlements-config');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
+        ], 'entitlements-migrations');
+
+        $this->publishes([
+            __DIR__.'/../resources/js/useFeature.ts' => $this->app->resourcePath('js/useFeature.ts'),
+        ], 'entitlements-js');
     }
 }
