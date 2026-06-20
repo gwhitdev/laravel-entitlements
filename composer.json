@@ -22,7 +22,7 @@
         "pestphp/pest": "^3.0 || ^4.0"
     },
     "suggest": {
-        "laravel/cashier": "Default CashierPlanResolver maps Stripe prices to entitlements (the seam supports other billers).",
+        "laravel/cashier": "Default StripePlanResolver maps Stripe prices to entitlements (the seam supports other billers).",
         "laravel/pennant": "Optional bridge: expose entitlements as Pennant features for a familiar check API."
     },
     "autoload": {

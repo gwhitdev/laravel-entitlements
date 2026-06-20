@@ -12,12 +12,12 @@ Route::get('/reports', ...)->middleware('feature:advanced_reporting');
 
 ## Status
 
-🚧 **In development.** The contracts, schema, and acceptance spec are pinned — see [`SPEC.md`](SPEC.md). Stage 1 (the free core engine) is in progress.
+Stages 1–3 shipped. See [`SPEC.md`](SPEC.md) for what each stage delivered.
 
 ## Design at a glance
 
 - **Free MIT core** (this package) + a paid admin UI (drag-drop plan↔feature mapping) sold separately.
-- **Seams, defaulted:** `PlanResolver` (Cashier by default, billing-agnostic underneath), `FeatureCatalog` (enum by default; config/DB drivers), `FeatureGate` (the only public surface — keeps it headless).
+- **Seams, defaulted:** `PlanResolver` (Stripe/Cashier by default, billing-agnostic underneath), `FeatureCatalog` (enum by default; config/DB drivers), `FeatureGate` (the only public surface — keeps it headless).
 - **Pennant bridge** (optional): expose entitlements as Pennant features for a familiar check API.
 - **Built for artisans *and* agents:** ships with agent instructions so an AI assistant can gate a feature correctly in one prompt.
 

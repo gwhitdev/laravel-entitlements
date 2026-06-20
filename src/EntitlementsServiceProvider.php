@@ -2,6 +2,7 @@
 
 namespace Entitlements;
 
+use Entitlements\Bridge\PennantBridge;
 use Entitlements\Console\InstallCommand;
 use Entitlements\Console\LintCommand;
 use Entitlements\Console\MakeFeatureCommand;
@@ -47,6 +48,8 @@ class EntitlementsServiceProvider extends ServiceProvider
             $this->bootCommands();
             $this->bootPublishing();
         }
+
+        $this->bootPennantBridge();
     }
 
     private function bootMiddleware(): void
@@ -74,6 +77,17 @@ class EntitlementsServiceProvider extends ServiceProvider
             LintCommand::class,
             MakeFeatureCommand::class,
         ]);
+    }
+
+    private function bootPennantBridge(): void
+    {
+        if (! config('entitlements.pennant') || ! class_exists(\Laravel\Pennant\Feature::class)) {
+            return;
+        }
+
+        $this->app->booted(function (): void {
+            $this->app->make(PennantBridge::class)->register();
+        });
     }
 
     private function bootPublishing(): void

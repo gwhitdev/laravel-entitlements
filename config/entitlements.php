@@ -47,4 +47,11 @@ return [
      | Optional keys: 'name' (defaults to Str::headline($key)), 'description' (defaults to null).
      */
     'features' => [],
+
+    /*
+     | Pennant bridge: when true (and laravel/pennant is installed), every catalog feature is
+     | registered as a Pennant feature on boot, delegating to the entitlements gate.
+     | Usage: Feature::for($user)->active('advanced_reporting')
+     */
+    'pennant' => false,
 ];
