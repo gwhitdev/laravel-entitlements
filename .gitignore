@@ -3,3 +3,9 @@
 composer.lock
 .phpunit.result.cache
 .DS_Store
+
+# Internal docs / AI working files — never publish
+SPEC.md
+STAGE_*_PROMPT.md
+/.claude/
+*.local.md
