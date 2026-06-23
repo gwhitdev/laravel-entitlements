@@ -64,9 +64,32 @@ class CascadingFeatureGate implements FeatureGate
         return array_values(array_unique($keys));
     }
 
+    /**
+     * Flush all per-user memoization. The container binds this gate `scoped`, so Octane and
+     * queue workers call this implicitly at each request/job boundary; expose it so a long-lived
+     * process can also reset entitlement state explicitly after a grant/plan change.
+     */
+    public function flush(): void
+    {
+        $this->memoGrants = [];
+        $this->memoActive = [];
+        $this->memoPlanKeys = [];
+    }
+
     private function isAdmin(Authenticatable $user): bool
     {
-        return (bool) config('entitlements.admin_override') && (bool) ($user->is_admin ?? false);
+        if (! (bool) config('entitlements.admin_override')) {
+            return false;
+        }
+
+        // Prefer an explicit, non-mass-assignable hook on the user model so admin status is a
+        // deliberate decision. Fall back to the `is_admin` attribute only if no hook is defined —
+        // consumers MUST ensure that attribute is never mass-assignable (see SECURITY notes).
+        if (method_exists($user, 'isEntitlementAdmin')) {
+            return (bool) $user->isEntitlementAdmin();
+        }
+
+        return (bool) ($user->is_admin ?? false);
     }
 
     private function id(Authenticatable $user): int|string

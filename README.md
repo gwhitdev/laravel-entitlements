@@ -136,8 +136,9 @@ return [
     'plan_store' => 'database',
     'plans' => [],
 
-    // When true, users flagged is_admin are entitled to every feature.
-    'admin_override' => true,
+    // Off by default (fail-closed). When enabled, an admin is entitled to every feature; prefer
+    // defining isEntitlementAdmin() on your User model over relying on a raw is_admin column.
+    'admin_override' => false,
 ];
 ```
 

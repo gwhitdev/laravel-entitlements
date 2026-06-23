@@ -36,6 +36,7 @@ function makeResolver(?string $plan = null, bool $active = false): FakePlanResol
 }
 
 it('grants every feature to an admin (override at the top of the cascade)', function () {
+    config()->set('entitlements.admin_override', true);
     makeResolver();
     $admin = User::create(['is_admin' => true]);
 

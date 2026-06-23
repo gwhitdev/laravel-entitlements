@@ -34,3 +34,26 @@ jobs:
 
       - name: Run tests
         run: vendor/bin/pest
+
+  security:
+    runs-on: ubuntu-latest
+    name: Dependency audit
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      # Install without the advisory block (the 11.x matrix needs that workaround), then run a
+      # dedicated audit step so a vulnerable dependency still fails this job and is visible.
+      - name: Install dependencies
+        run: |
+          composer config --global policy.advisories.block false
+          composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Audit dependencies
+        run: composer audit --no-interaction

@@ -42,6 +42,8 @@ it('returns the expected entitlement keys for a user', function () {
 });
 
 it('returns every catalog feature for an admin', function () {
+    config()->set('entitlements.admin_override', true);
+
     $fake = new FakePlanResolver;
     app()->instance(PlanResolver::class, $fake);
 

@@ -29,7 +29,18 @@ class EntitlementsServiceProvider extends ServiceProvider
         ] as $contract => $configKey) {
             $class = config("entitlements.{$configKey}");
 
-            if (is_string($class) && class_exists($class)) {
+            if (! is_string($class) || ! class_exists($class)) {
+                continue;
+            }
+
+            // The gate memoizes per-user resolution for the lifetime of its instance. Bind it
+            // `scoped` (not `singleton`) so that memo is flushed at every request/job boundary:
+            // Octane and queue workers reset scoped instances between requests, which prevents a
+            // revoked grant or downgraded plan from being served stale inside a long-lived
+            // process. The resolver and catalog are stateless, so they stay singletons.
+            if ($contract === FeatureGate::class) {
+                $this->app->scoped($contract, $class);
+            } else {
                 $this->app->singleton($contract, $class);
             }
         }

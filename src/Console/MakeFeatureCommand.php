@@ -15,10 +15,20 @@ class MakeFeatureCommand extends Command
 
     public function handle(): int
     {
+        $name = (string) $this->argument('name');
+
+        // The name is written verbatim into generated PHP source, so constrain it to a safe
+        // identifier shape. Without this, a crafted argument could inject code into the enum file.
+        if (! preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $name)) {
+            $this->error('Feature name must start with a letter and contain only letters and digits.');
+
+            return self::FAILURE;
+        }
+
         $enumClass = config('entitlements.enum');
 
-        $studly = Str::studly($this->argument('name'));
-        $value = Str::snake($this->argument('name'));
+        $studly = Str::studly($name);
+        $value = Str::snake($name);
 
         if (! class_exists($enumClass)) {
             $basename = class_basename($enumClass);
