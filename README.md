@@ -12,7 +12,7 @@ Route::get('/reports', ...)->middleware('feature:advanced_reporting');
 
 ## Status
 
-🚧 **In development.** The contracts, schema, and acceptance spec are pinned. Stage 1 (the free core engine) is in progress.
+**Alpha.** Stages 1–3 are complete (core engine, DX layer, declarative dependencies) and a security hardening pass has shipped. The package is usable — install it, kick the tyres, and open issues. Expect API stability from here but no production-stability guarantee until v1.0.
 
 ## Requirements
 
