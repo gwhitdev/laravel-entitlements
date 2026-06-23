@@ -16,7 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserFeature extends Model
 {
-    protected $fillable = ['user_id', 'feature_key'];
+    // Fully guarded: granting a feature is an authorization decision that must go through the
+    // controlled grant() path below, never through mass assignment. This blocks a consumer from
+    // accidentally letting a user grant themselves a feature via UserFeature::create($request->all()).
+    protected $guarded = ['*'];
 
     /**
      * Grant a feature directly to a user (idempotent). Accepts a user model or id, and a
@@ -26,9 +29,11 @@ class UserFeature extends Model
     {
         $userId = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user;
 
-        return static::firstOrCreate([
+        // unguarded() bypasses mass-assignment protection only for these two controlled,
+        // non-user-arbitrary columns, then restores it.
+        return static::unguarded(fn (): self => static::firstOrCreate([
             'user_id' => $userId,
             'feature_key' => FeatureKey::normalise($feature),
-        ]);
+        ]));
     }
 }

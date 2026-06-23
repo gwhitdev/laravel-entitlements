@@ -37,9 +37,13 @@ return [
     'plans' => [],
 
     /*
-     | When true, users flagged is_admin are entitled to every feature (top of the cascade).
+     | Admin override sits at the very top of the cascade: when enabled, an admin user is entitled
+     | to EVERY feature. It is OFF by default (fail-closed) so that an accidentally-set or
+     | mass-assignable `is_admin` attribute can never become a blanket entitlement bypass.
+     | Opt in explicitly, and prefer defining isEntitlementAdmin() on your User model over relying
+     | on a raw `is_admin` column.
      */
-    'admin_override' => true,
+    'admin_override' => false,
 
     /*
      | Feature definitions used by ConfigFeatureCatalog (when catalog driver is set to it).

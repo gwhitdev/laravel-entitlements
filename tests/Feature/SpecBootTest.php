@@ -11,7 +11,7 @@ uses(RefreshDatabase::class);
 
 it('boots with the published config defaults', function () {
     expect(config('entitlements.plan_store'))->toBe('database');
-    expect(config('entitlements.admin_override'))->toBeTrue();
+    expect(config('entitlements.admin_override'))->toBeFalse();
 });
 
 it('migrates the three entitlement tables', function () {
