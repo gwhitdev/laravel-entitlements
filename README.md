@@ -3,7 +3,7 @@
 [![Tests](https://github.com/gwhitdev/laravel-entitlements/actions/workflows/tests.yml/badge.svg)](https://github.com/gwhitdev/laravel-entitlements/actions/workflows/tests.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/gwhitdev/entitlements-for-laravel.svg)](https://packagist.org/packages/gwhitdev/entitlements-for-laravel)
 [![PHP Version](https://img.shields.io/packagist/php-v/gwhitdev/entitlements-for-laravel.svg)](https://packagist.org/packages/gwhitdev/entitlements-for-laravel)
-[![License](https://img.shields.io/packagist/l/gwhitdev/entitlements-for-laravel.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/gwhitdev/laravel-entitlements)](LICENSE)
 
 > Plan-based feature **entitlements** for Laravel — the layer between Cashier (*who pays*) and your app (*what paying unlocks*). Facade: **Tessera**. Part of the [Keel](https://github.com/gwhitdev) line.
 
