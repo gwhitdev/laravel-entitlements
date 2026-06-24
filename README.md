@@ -205,6 +205,10 @@ The suite runs against PHP 8.2–8.4 and Laravel 11–12 in CI. A dependency aud
 
 Please email [garethwhitleychard@gmail.com](mailto:garethwhitleychard@gmail.com) to report vulnerabilities rather than opening a public issue. You'll receive a response within 72 hours.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
+
 ## License
 
 MIT.
