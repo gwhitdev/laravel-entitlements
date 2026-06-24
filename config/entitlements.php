@@ -37,6 +37,13 @@ return [
     'plans' => [],
 
     /*
+     | The Cashier subscription name passed to subscription() and subscribed().
+     | Null resolves to Cashier's default ('default'). Set this if your app uses
+     | a named subscription (e.g. 'main') rather than the default one.
+     */
+    'subscription_name' => null,
+
+    /*
      | Admin override sits at the very top of the cascade: when enabled, an admin user is entitled
      | to EVERY feature. It is OFF by default (fail-closed) so that an accidentally-set or
      | mass-assignable `is_admin` attribute can never become a blanket entitlement bypass.
