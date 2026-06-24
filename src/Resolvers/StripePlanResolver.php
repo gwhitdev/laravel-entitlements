@@ -21,11 +21,23 @@ class StripePlanResolver implements PlanResolver
             return null;
         }
 
-        return $user->subscription()?->stripe_price;
+        $name = config('entitlements.subscription_name');
+
+        return $name !== null
+            ? $user->subscription($name)?->stripe_price
+            : $user->subscription()?->stripe_price;
     }
 
     public function isActive(Authenticatable $user): bool
     {
-        return method_exists($user, 'subscribed') ? (bool) $user->subscribed() : false;
+        if (! method_exists($user, 'subscribed')) {
+            return false;
+        }
+
+        $name = config('entitlements.subscription_name');
+
+        return $name !== null
+            ? (bool) $user->subscribed($name)
+            : (bool) $user->subscribed();
     }
 }
