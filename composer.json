@@ -42,6 +42,9 @@
             ]
         }
     },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
