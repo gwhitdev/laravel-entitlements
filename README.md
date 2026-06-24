@@ -1,5 +1,10 @@
 # Entitlements for Laravel
 
+[![Tests](https://github.com/gwhitdev/laravel-entitlements/actions/workflows/tests.yml/badge.svg)](https://github.com/gwhitdev/laravel-entitlements/actions/workflows/tests.yml)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/gwhitdev/entitlements-for-laravel.svg)](https://packagist.org/packages/gwhitdev/entitlements-for-laravel)
+[![PHP Version](https://img.shields.io/packagist/php-v/gwhitdev/entitlements-for-laravel.svg)](https://packagist.org/packages/gwhitdev/entitlements-for-laravel)
+[![License](https://img.shields.io/packagist/l/gwhitdev/entitlements-for-laravel.svg)](LICENSE)
+
 > Plan-based feature **entitlements** for Laravel — the layer between Cashier (*who pays*) and your app (*what paying unlocks*). Facade: **Tessera**. Part of the [Keel](https://github.com/gwhitdev) line.
 
 Cashier gives you subscriptions. Pennant gives you feature flags. Neither answers the question every SaaS actually asks: **"does this user's plan include this feature?"** That's an *entitlement*, and this package is the engine for it — a memoized resolution cascade over plan mappings, per-user grants, and membership state, with the seams to swap billing provider and feature catalog without rewrites.
@@ -166,6 +171,18 @@ If you need quota tracking on top of access gating, the roadmap includes a **con
 - **Seams, defaulted:** `PlanResolver` (Cashier by default, billing-agnostic underneath), `FeatureCatalog` (enum by default; config/DB drivers), `FeatureGate` (the only public surface — keeps it headless).
 - **Pennant bridge** (optional): expose entitlements as Pennant features for a familiar check API.
 - **Built for artisans *and* agents:** ships with agent instructions so an AI assistant can gate a feature correctly in one prompt.
+
+## Testing
+
+```bash
+composer test
+```
+
+The suite runs against PHP 8.2–8.4 and Laravel 11–12 in CI. A dependency audit job runs alongside it on every push.
+
+## Security
+
+Please email [garethwhitleychard@gmail.com](mailto:garethwhitleychard@gmail.com) to report vulnerabilities rather than opening a public issue. You'll receive a response within 72 hours.
 
 ## License
 
