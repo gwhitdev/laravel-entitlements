@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] — 2026-06-24
+
+### Added
+- `subscription_name` config option — pass a named subscription to `subscription()` and `subscribed()` when your app uses a non-default Cashier subscription. Defaults to `null` (Cashier's `'default'`).
+- Laravel 13 in the CI test matrix (PHP 8.3 and 8.4 only — Laravel 13 requires PHP ^8.3).
+
 ## [0.2.0] — 2026-06-24
 
 ### Added
