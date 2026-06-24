@@ -17,7 +17,7 @@ Route::get('/reports', ...)->middleware('feature:advanced_reporting');
 
 ## Status
 
-**Alpha — v0.2.0.** Stages 1–3 are complete (core engine, DX layer, declarative dependencies), a security hardening pass has shipped, and the optional Pennant bridge is available. The package is usable — install it, kick the tyres, and open issues. Expect API stability from here but no production-stability guarantee until v1.0.
+**Alpha — v0.3.0.** The core engine, DX layer, declarative dependencies, security hardening, and Pennant bridge are all complete. Laravel 11–13 and PHP 8.2–8.4 are tested in CI. The package is usable and under real-world validation — install it, kick the tyres, and open issues. Production-stability guarantee comes at v1.0.
 
 ## Requirements
 
