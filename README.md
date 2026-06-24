@@ -170,7 +170,7 @@ If you need quota tracking on top of access gating, the roadmap includes a **con
 - **Free MIT core** (this package) + a paid admin UI (drag-drop plan ↔ feature mapping) sold separately.
 - **Seams, defaulted:** `PlanResolver` (Cashier by default, billing-agnostic underneath), `FeatureCatalog` (enum by default; config/DB drivers), `FeatureGate` (the only public surface — keeps it headless).
 - **Pennant bridge** (optional): expose entitlements as Pennant features for a familiar check API.
-- **Built for artisans *and* agents:** ships with agent instructions so an AI assistant can gate a feature correctly in one prompt.
+- **Built for artisans *and* agents:** ships with [`AGENTS.md`](AGENTS.md) so an AI assistant can gate a feature correctly in one prompt.
 
 ## Testing
 
