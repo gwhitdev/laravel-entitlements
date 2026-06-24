@@ -171,6 +171,28 @@ public function isEntitlementAdmin(): bool
 
 ---
 
+## Pennant bridge (optional)
+
+If the codebase uses Laravel Pennant and you want existing `Feature::` check sites to keep working, call this once in `AppServiceProvider::boot()`:
+
+```php
+use Entitlements\Bridge\PennantBridge;
+
+PennantBridge::register();
+```
+
+This iterates the catalog and registers every feature key with Pennant, delegating resolution to the entitlement cascade. After calling it:
+
+```php
+Feature::for($user)->active('advanced_reporting'); // same as $user->hasFeature(...)
+```
+
+**Do not** use `Feature::define()` manually for feature keys that are already in the catalog — that would create two conflicting definitions. `PennantBridge::register()` handles all of them in one call.
+
+Pennant's own storage and caching are bypassed — resolution always hits the cascade, so per-user grants and plan changes are reflected without any Pennant cache flush.
+
+---
+
 ## Common mistakes
 
 **Don't check the plan directly** — never read `$user->subscription()->stripe_price` and branch on it. Always go through `hasFeature()`. The cascade handles grants, admin overrides, and inactive subscriptions for you.

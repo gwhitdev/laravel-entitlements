@@ -17,7 +17,7 @@ Route::get('/reports', ...)->middleware('feature:advanced_reporting');
 
 ## Status
 
-**Alpha.** Stages 1–3 are complete (core engine, DX layer, declarative dependencies) and a security hardening pass has shipped. The package is usable — install it, kick the tyres, and open issues. Expect API stability from here but no production-stability guarantee until v1.0.
+**Alpha — v0.2.0.** Stages 1–3 are complete (core engine, DX layer, declarative dependencies), a security hardening pass has shipped, and the optional Pennant bridge is available. The package is usable — install it, kick the tyres, and open issues. Expect API stability from here but no production-stability guarantee until v1.0.
 
 ## Requirements
 
@@ -111,6 +111,27 @@ Route::get('/reports', ReportController::class)
     <a href="/reports">Advanced reporting</a>
 @endfeature
 ```
+
+### Pennant bridge (optional)
+
+If your codebase already uses Laravel Pennant, you can expose all entitlements as Pennant features so existing `Feature::` check sites keep working:
+
+```php
+// In AppServiceProvider::boot()
+use Entitlements\Bridge\PennantBridge;
+
+PennantBridge::register();
+```
+
+After calling this, Pennant's standard API resolves through the entitlement cascade:
+
+```php
+use Laravel\Pennant\Feature;
+
+Feature::for($user)->active('advanced_reporting'); // delegates to Tessera
+```
+
+Pennant's own storage and caching are bypassed — resolution always goes through the cascade, so grants and plan changes are reflected immediately.
 
 ### Artisan commands
 
