@@ -35,6 +35,30 @@ jobs:
       - name: Run tests
         run: vendor/bin/pest
 
+  test-without-pennant:
+    runs-on: ubuntu-latest
+    name: Without optional Pennant dependency
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite, pdo_sqlite
+          coverage: none
+
+      - name: Install dependencies without Pennant
+        run: |
+          composer config --global policy.advisories.block false
+          composer update --prefer-dist --no-interaction --no-progress
+          composer remove laravel/pennant --dev --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Run tests (Pennant bridge suite skipped automatically)
+        run: vendor/bin/pest
+
   security:
     runs-on: ubuntu-latest
     name: Dependency audit
